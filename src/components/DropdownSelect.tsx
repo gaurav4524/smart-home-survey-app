@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { LucideIcon } from "lucide-react";
 
 type Option = {
   value: string;
@@ -42,6 +41,20 @@ const DropdownSelect = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Close dropdown when touch outside (for mobile)
+  useEffect(() => {
+    const handleTouchOutside = (event: TouchEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("touchend", handleTouchOutside);
+    return () => {
+      document.removeEventListener("touchend", handleTouchOutside);
     };
   }, []);
 
@@ -114,9 +127,10 @@ const DropdownSelect = ({
 
   return (
     <div className={cn("relative", className)} ref={dropdownRef}>
-      <div
-        className="flex items-center justify-between p-3 border rounded-md bg-background cursor-pointer hover:border-primary/50 transition-colors duration-200"
+      <motion.div
+        className="flex items-center justify-between p-4 border rounded-md bg-background cursor-pointer hover:border-primary/50 transition-colors duration-200 active:bg-gray-100"
         onClick={() => setIsOpen(!isOpen)}
+        whileTap={{ scale: 0.98 }}
       >
         <span className={cn(
           value ? "text-foreground" : "text-muted-foreground",
@@ -128,27 +142,28 @@ const DropdownSelect = ({
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
         >
-          <ChevronDownIcon className="h-4 w-4" />
+          <ChevronDownIcon className="h-5 w-5" />
         </motion.div>
-      </div>
+      </motion.div>
       
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            className="absolute z-50 w-full mt-1 bg-background/95 backdrop-blur-sm border rounded-md shadow-lg max-h-60 overflow-auto"
+            className="absolute z-50 w-full mt-1 bg-background shadow-lg border rounded-md max-h-64 overflow-auto"
             variants={dropdownVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
+            style={{ backdropFilter: "blur(8px)" }}
           >
             {options.map((option, index) => (
               <motion.div
                 key={option.value}
                 className={cn(
-                  "flex items-center justify-between p-3 cursor-pointer",
+                  "flex items-center justify-between p-4 cursor-pointer",
                   isSelected(option.value) 
                     ? "bg-primary/10 text-primary" 
-                    : "hover:bg-secondary",
+                    : "hover:bg-secondary active:bg-secondary/80",
                   "transition-colors duration-200"
                 )}
                 onClick={() => handleSelect(option.value)}
@@ -156,22 +171,22 @@ const DropdownSelect = ({
                 custom={index}
                 initial="hidden"
                 animate="visible"
-                whileHover="hover"
+                whileTap={{ scale: 0.98 }}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   {option.icon && (
                     <span className="text-primary">
                       {React.isValidElement(option.icon) 
                         ? option.icon 
                         : option.icon && typeof option.icon === 'function'
-                          ? React.createElement(option.icon as React.ComponentType<{size?: number}>, { size: 18 })
+                          ? React.createElement(option.icon as React.ComponentType<{size?: number}>, { size: 20 })
                           : null}
                     </span>
                   )}
-                  <span>{option.label}</span>
+                  <span className="text-base">{option.label}</span>
                 </div>
                 {isSelected(option.value) && (
-                  <CheckIcon className="h-4 w-4 text-primary animate-pulse-gentle" />
+                  <CheckIcon className="h-5 w-5 text-primary" />
                 )}
               </motion.div>
             ))}
