@@ -1,4 +1,3 @@
-
 import { useHome } from "@/context/HomeContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -118,7 +117,7 @@ const ProfileScreen = () => {
           className="flex-col h-auto py-2"
           onClick={() => navigate('/scenes')}
         >
-          <SliderIcon className="h-5 w-5 mb-1" />
+          <SlidersIcon className="h-5 w-5 mb-1" />
           <span className="text-xs">Scenes</span>
         </Button>
         <Button 
