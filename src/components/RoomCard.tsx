@@ -1,8 +1,18 @@
+
 import { useState } from "react";
 import { Appliance, Room, useHome } from "@/context/HomeContext";
 import { ApplianceControl } from "./ApplianceButtons";
 import { cn } from "@/lib/utils";
-import { LightbulbIcon, FanIcon, AirVentIcon, Plug2Icon } from "lucide-react";
+import { 
+  LightbulbIcon, 
+  FanIcon, 
+  AirVentIcon, 
+  Plug2Icon, 
+  DoorClosedIcon,
+  DoorOpenIcon, 
+  ThermometerIcon,
+  ZapIcon 
+} from "lucide-react";
 
 const RoomCard = ({ room }: { room: Room }) => {
   const { toggleAppliance, updateAppliance } = useHome();
@@ -44,6 +54,17 @@ const RoomCard = ({ room }: { room: Room }) => {
     groupedAppliances[appliance.type].push(appliance);
   });
 
+  // Get appropriate icon for each appliance type
+  const getIcon = (type: string) => {
+    switch (type) {
+      case 'Light': return <LightbulbIcon className="w-4 h-4" />;
+      case 'Fan': return <FanIcon className="w-4 h-4" />;
+      case 'Air Conditioner': return <AirVentIcon className="w-4 h-4" />;
+      case 'Outlet': return <Plug2Icon className="w-4 h-4" />;
+      default: return <Plug2Icon className="w-4 h-4" />;
+    }
+  };
+
   return (
     <div className={cn(
       "bg-card rounded-xl shadow-sm border overflow-hidden transition-all duration-300",
@@ -61,15 +82,42 @@ const RoomCard = ({ room }: { room: Room }) => {
           </span>
         </div>
         
+        {/* Room stats in a mini grid */}
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-3">
+          {/* Temperature if available */}
+          {room.temperature && (
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <ThermometerIcon className="w-4 h-4" />
+              <span>{room.temperature}°F</span>
+            </div>
+          )}
+          
+          {/* Energy usage if available */}
+          {room.energyUsage && (
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <ZapIcon className="w-4 h-4" />
+              <span>{room.energyUsage} units</span>
+            </div>
+          )}
+          
+          {/* Door status if available */}
+          {room.hasDoorSensor && (
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              {room.doorOpen ? 
+                <DoorOpenIcon className="w-4 h-4" /> : 
+                <DoorClosedIcon className="w-4 h-4" />
+              }
+              <span>Door {room.doorOpen ? "Open" : "Closed"}</span>
+            </div>
+          )}
+        </div>
+        
         {/* Appliance summary */}
-        <div className="flex gap-4 mt-3">
+        <div className="flex flex-wrap gap-2 mt-3">
           {Object.entries(applianceCounts).map(([type, count]) => (
-            <div key={type} className="flex items-center gap-1 text-sm text-muted-foreground">
-              {type === 'Light' && <LightbulbIcon className="w-4 h-4" />}
-              {type === 'Fan' && <FanIcon className="w-4 h-4" />}
-              {type === 'Air Conditioner' && <AirVentIcon className="w-4 h-4" />}
-              {type === 'Outlet' && <Plug2Icon className="w-4 h-4" />}
-              {count}
+            <div key={type} className="flex items-center gap-1 text-xs px-2 py-1 bg-secondary rounded-full">
+              {getIcon(type)}
+              <span>{count} {type}{count > 1 ? 's' : ''}</span>
             </div>
           ))}
         </div>
@@ -91,7 +139,7 @@ const RoomCard = ({ room }: { room: Room }) => {
                       onTemperatureChange={(value) => handleTemperatureChange(appliance.id, value)}
                     />
                     <p className="text-xs mt-1 text-muted-foreground">
-                      {appliance.isOn ? "On" : "Off"}
+                      {appliance.name}
                     </p>
                   </div>
                 ))}

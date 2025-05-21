@@ -1,5 +1,5 @@
 
-import { LightbulbIcon, FanIcon, AirVentIcon, Plug2Icon } from "lucide-react";
+import { LightbulbIcon, FanIcon, AirVentIcon, Plug2Icon, SmartphoneIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Appliance } from "@/context/HomeContext";
 
@@ -175,6 +175,33 @@ export const OutletButton = ({
   );
 };
 
+// CustomDeviceButton for any custom device types
+export const CustomDeviceButton = ({ 
+  appliance, 
+  onToggle 
+}: { 
+  appliance: Appliance; 
+  onToggle: () => void 
+}) => {
+  return (
+    <button
+      onClick={onToggle}
+      className={cn(
+        "relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300",
+        appliance.isOn 
+          ? "bg-purple-400 text-purple-900 shadow-lg shadow-purple-200" 
+          : "bg-gray-200 text-gray-400"
+      )}
+      aria-label={`Toggle ${appliance.isOn ? 'off' : 'on'}`}
+    >
+      <SmartphoneIcon className="w-6 h-6" />
+      {appliance.isOn && (
+        <div className="absolute inset-0 rounded-full bg-purple-400 opacity-20 animate-pulse-slow" />
+      )}
+    </button>
+  );
+};
+
 // ApplianceControl combines all buttons
 export const ApplianceControl = ({
   appliance,
@@ -209,6 +236,6 @@ export const ApplianceControl = ({
     case 'Outlet':
       return <OutletButton appliance={appliance} onToggle={onToggle} />;
     default:
-      return null;
+      return <CustomDeviceButton appliance={appliance} onToggle={onToggle} />;
   }
 };

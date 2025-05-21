@@ -4,7 +4,8 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 // Define types for our context
 export type Appliance = {
   id: string;
-  type: 'Light' | 'Fan' | 'Air Conditioner' | 'Outlet';
+  type: string;
+  name: string;
   isOn: boolean;
   intensity?: number; // For fans and dimmable lights
   temperature?: number; // For air conditioners
@@ -14,6 +15,10 @@ export type Room = {
   id: string;
   name: string;
   appliances: Appliance[];
+  temperature?: number; // Room temperature
+  energyUsage?: number; // Energy usage in units
+  hasDoorSensor?: boolean;
+  doorOpen?: boolean; // Door status if sensor exists
 };
 
 type HomeContextType = {
@@ -27,12 +32,15 @@ type HomeContextType = {
   addApplianceToRoom: (roomId: string, appliance: Appliance) => void;
   updateAppliance: (roomId: string, applianceId: string, updates: Partial<Appliance>) => void;
   toggleAppliance: (roomId: string, applianceId: string) => void;
+  toggleAllAppliances: (isOn: boolean) => void;
+  toggleNightMode: () => void;
   nextStep: () => void;
   prevStep: () => void;
   goToStep: (step: number) => void;
   resetSurvey: () => void;
   surveyCompleted: boolean;
   setSurveyCompleted: (completed: boolean) => void;
+  isNightMode: boolean;
 };
 
 // Create context with default values
@@ -47,12 +55,15 @@ const HomeContext = createContext<HomeContextType>({
   addApplianceToRoom: () => {},
   updateAppliance: () => {},
   toggleAppliance: () => {},
+  toggleAllAppliances: () => {},
+  toggleNightMode: () => {},
   nextStep: () => {},
   prevStep: () => {},
   goToStep: () => {},
   resetSurvey: () => {},
   surveyCompleted: false,
   setSurveyCompleted: () => {},
+  isNightMode: false,
 });
 
 // Create provider component
@@ -65,6 +76,7 @@ export const HomeProvider = ({ children }: { children: ReactNode }) => {
   const [numRooms, setNumRooms] = useState<number>(initialData?.numRooms || 0);
   const [currentStep, setCurrentStep] = useState<number>(initialData?.currentStep || 1);
   const [surveyCompleted, setSurveyCompleted] = useState<boolean>(initialData?.surveyCompleted || false);
+  const [isNightMode, setIsNightMode] = useState<boolean>(initialData?.isNightMode || false);
 
   // Save data to localStorage whenever it changes
   useEffect(() => {
@@ -72,9 +84,10 @@ export const HomeProvider = ({ children }: { children: ReactNode }) => {
       rooms, 
       numRooms, 
       currentStep,
-      surveyCompleted
+      surveyCompleted,
+      isNightMode
     }));
-  }, [rooms, numRooms, currentStep, surveyCompleted]);
+  }, [rooms, numRooms, currentStep, surveyCompleted, isNightMode]);
 
   // Add a new room
   const addRoom = (room: Room) => {
@@ -136,6 +149,36 @@ export const HomeProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
+  // Toggle all appliances on/off
+  const toggleAllAppliances = (isOn: boolean) => {
+    setRooms((prevRooms) =>
+      prevRooms.map((room) => ({
+        ...room,
+        appliances: room.appliances.map((appliance) => ({
+          ...appliance,
+          isOn: isOn
+        }))
+      }))
+    );
+  };
+
+  // Toggle night mode
+  const toggleNightMode = () => {
+    setIsNightMode((prev) => !prev);
+    // When night mode is activated, turn off all appliances except essential ones
+    if (!isNightMode) {
+      setRooms((prevRooms) =>
+        prevRooms.map((room) => ({
+          ...room,
+          appliances: room.appliances.map((appliance) => ({
+            ...appliance,
+            isOn: appliance.type.includes('Night Light') ? true : false
+          }))
+        }))
+      );
+    }
+  };
+
   // Navigation functions for the survey
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => Math.max(1, prev - 1));
@@ -147,6 +190,7 @@ export const HomeProvider = ({ children }: { children: ReactNode }) => {
     setNumRooms(0);
     setCurrentStep(1);
     setSurveyCompleted(false);
+    setIsNightMode(false);
   };
 
   return (
@@ -162,12 +206,15 @@ export const HomeProvider = ({ children }: { children: ReactNode }) => {
         addApplianceToRoom,
         updateAppliance,
         toggleAppliance,
+        toggleAllAppliances,
+        toggleNightMode,
         nextStep,
         prevStep,
         goToStep,
         resetSurvey,
         surveyCompleted,
         setSurveyCompleted,
+        isNightMode,
       }}
     >
       {children}
