@@ -1,11 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useHome } from "@/context/HomeContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import RoomCard from "@/components/RoomCard";
-import { CloudSunIcon, BedIcon, HomeIcon, UserIcon, SliderIcon, LineChartIcon } from "lucide-react";
+import { CloudSunIcon, BedIcon, HomeIcon, UserIcon, SlidersIcon, LineChartIcon } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 
 const HomeScreen = () => {
@@ -196,7 +195,7 @@ const HomeScreen = () => {
           <span className="text-xs">Home</span>
         </Button>
         <Button variant="ghost" className="flex-col h-auto py-2">
-          <SliderIcon className="h-5 w-5 mb-1" />
+          <SlidersIcon className="h-5 w-5 mb-1" />
           <span className="text-xs">Scenes</span>
         </Button>
         <Button variant="ghost" className="flex-col h-auto py-2">

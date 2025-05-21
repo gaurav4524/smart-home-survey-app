@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { useHome } from "@/context/HomeContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { SliderIcon, PlusIcon, HomeIcon, UserIcon, LineChartIcon } from "lucide-react";
+import { SlidersIcon, PlusIcon, HomeIcon, UserIcon, LineChartIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const SceneScreen = () => {
@@ -66,7 +65,7 @@ const SceneScreen = () => {
           ) : (
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-8 text-center">
-                <SliderIcon className="h-10 w-10 text-muted-foreground mb-3" />
+                <SlidersIcon className="h-10 w-10 text-muted-foreground mb-3" />
                 <h3 className="font-medium mb-1">No Custom Scenes</h3>
                 <p className="text-sm text-muted-foreground">
                   Create your own scenes to automate multiple devices at once
@@ -94,7 +93,7 @@ const SceneScreen = () => {
           variant="ghost" 
           className="flex-col h-auto py-2 text-smart-primary"
         >
-          <SliderIcon className="h-5 w-5 mb-1" />
+          <SlidersIcon className="h-5 w-5 mb-1" />
           <span className="text-xs">Scenes</span>
         </Button>
         <Button 

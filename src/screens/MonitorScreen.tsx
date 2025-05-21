@@ -1,9 +1,8 @@
-
 import { useHome } from "@/context/HomeContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { HomeIcon, SliderIcon, LineChartIcon, UserIcon, ZapIcon } from "lucide-react";
+import { HomeIcon, SlidersIcon, LineChartIcon, UserIcon, ZapIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Dummy data for charts
@@ -124,7 +123,7 @@ const MonitorScreen = () => {
           className="flex-col h-auto py-2"
           onClick={() => navigate('/scenes')}
         >
-          <SliderIcon className="h-5 w-5 mb-1" />
+          <SlidersIcon className="h-5 w-5 mb-1" />
           <span className="text-xs">Scenes</span>
         </Button>
         <Button 
