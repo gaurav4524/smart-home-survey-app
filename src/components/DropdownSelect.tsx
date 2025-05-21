@@ -3,11 +3,12 @@ import { useState, useEffect, useRef } from "react";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { LucideIcon } from "lucide-react";
 
 type Option = {
   value: string;
   label: string;
-  icon?: React.ReactNode;
+  icon?: React.ComponentType<any> | React.ReactNode;
 };
 
 type DropdownSelectProps = {
@@ -158,7 +159,13 @@ const DropdownSelect = ({
                 whileHover="hover"
               >
                 <div className="flex items-center gap-2">
-                  {option.icon && <span className="text-primary">{option.icon}</span>}
+                  {option.icon && (
+                    <span className="text-primary">
+                      {React.isValidElement(option.icon) 
+                        ? option.icon 
+                        : React.createElement(option.icon as React.ComponentType, { size: 18 })}
+                    </span>
+                  )}
                   <span>{option.label}</span>
                 </div>
                 {isSelected(option.value) && (
