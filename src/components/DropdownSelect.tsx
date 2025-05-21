@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -163,7 +163,9 @@ const DropdownSelect = ({
                     <span className="text-primary">
                       {React.isValidElement(option.icon) 
                         ? option.icon 
-                        : React.createElement(option.icon as React.ComponentType, { size: 18 })}
+                        : option.icon && typeof option.icon === 'function'
+                          ? React.createElement(option.icon as React.ComponentType<{size?: number}>, { size: 18 })
+                          : null}
                     </span>
                   )}
                   <span>{option.label}</span>
