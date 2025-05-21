@@ -1,5 +1,5 @@
 
-import { LightbulbIcon, FanIcon, AirVentIcon, OutletIcon } from "lucide-react";
+import { LightbulbIcon, FanIcon, AirVentIcon, Plug2Icon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Appliance } from "@/context/HomeContext";
 
@@ -165,7 +165,7 @@ export const OutletButton = ({
       )}
       aria-label={`Toggle ${appliance.isOn ? 'off' : 'on'}`}
     >
-      <OutletIcon className="w-6 h-6" />
+      <Plug2Icon className="w-6 h-6" />
       {appliance.isOn && (
         <div className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full">
           <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-75"></div>

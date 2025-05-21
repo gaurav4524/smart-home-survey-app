@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useHome, Appliance } from "@/context/HomeContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { LightbulbIcon, FanIcon, AirVentIcon, OutletIcon } from "lucide-react";
+import { LightbulbIcon, FanIcon, AirVentIcon, Plug2Icon } from "lucide-react";
 import ProgressBar from "@/components/ProgressBar";
 import DropdownSelect from "@/components/DropdownSelect";
 import { v4 as uuidv4 } from "uuid";
@@ -13,7 +13,7 @@ const applianceOptions = [
   { value: "Light", label: "Light", icon: LightbulbIcon },
   { value: "Fan", label: "Fan", icon: FanIcon },
   { value: "Air Conditioner", label: "Air Conditioner", icon: AirVentIcon },
-  { value: "Outlet", label: "Outlet", icon: OutletIcon },
+  { value: "Outlet", label: "Outlet", icon: Plug2Icon },
 ];
 
 const SurveyStep3 = () => {

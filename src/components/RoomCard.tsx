@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { Appliance, Room, useHome } from "@/context/HomeContext";
 import { ApplianceControl } from "./ApplianceButtons";
 import { cn } from "@/lib/utils";
-import { LightbulbIcon, FanIcon, AirVentIcon, OutletIcon } from "lucide-react";
+import { LightbulbIcon, FanIcon, AirVentIcon, Plug2Icon } from "lucide-react";
 
 const RoomCard = ({ room }: { room: Room }) => {
   const { toggleAppliance, updateAppliance } = useHome();
@@ -69,7 +68,7 @@ const RoomCard = ({ room }: { room: Room }) => {
               {type === 'Light' && <LightbulbIcon className="w-4 h-4" />}
               {type === 'Fan' && <FanIcon className="w-4 h-4" />}
               {type === 'Air Conditioner' && <AirVentIcon className="w-4 h-4" />}
-              {type === 'Outlet' && <OutletIcon className="w-4 h-4" />}
+              {type === 'Outlet' && <Plug2Icon className="w-4 h-4" />}
               {count}
             </div>
           ))}
